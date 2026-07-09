@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

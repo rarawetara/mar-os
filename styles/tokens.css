@@ -1,0 +1,21 @@
+:root {
+  --pink: #ec4899;
+  --ink: #0a0a0a;
+  --paper: #fafaf7;
+  --muted: #6b7280;
+}
+
+@theme inline {
+  --color-pink: var(--pink);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+
+  /* display: жирные заголовки — Montserrat 800/900 (Anton/Archivo Black без кириллицы,
+     см. MAR.Plan.md BL-16). hand: акценты-секции — Caveat.
+     wordmark: логотип "MÄR" — Baloo 2. body: контент — Inter. */
+  --font-display: var(--font-display-src);
+  --font-hand: var(--font-caveat);
+  --font-wordmark: var(--font-baloo);
+  --font-body: var(--font-inter);
+}
