@@ -1,0 +1,17 @@
+name: Reminders cron
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger /api/cron/reminders
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -sSf -X POST "$APP_URL/api/cron/reminders" -H "x-cron-secret: $CRON_SECRET"
