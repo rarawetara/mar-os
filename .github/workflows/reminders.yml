@@ -26,7 +26,13 @@ jobs:
             -H "x-cron-secret: $CRON_SECRET")
 
           echo "HTTP $code"
-          cat /tmp/out.txt
+
+          # Тело ответа может содержать ID канала и прочие детали хранилища.
+          # По расписанию не печатаем — только когда запускаешь вручную и
+          # действительно разбираешься, что сломалось.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            cat /tmp/out.txt
+          fi
 
           case "$code" in
             200) echo "::notice::Напоминания разосланы" ;;
