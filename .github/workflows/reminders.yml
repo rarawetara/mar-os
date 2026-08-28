@@ -11,7 +11,25 @@ jobs:
     steps:
       - name: Trigger /api/cron/reminders
         env:
-          APP_URL: ${{ secrets.APP_URL }}
+          # Адрес не секрет — он публичный. В секретах он раньше был пустым,
+          # и curl молча падал на "No host part in the URL" месяцами.
+          APP_URL: https://mar-os-gamma.vercel.app
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          curl -sSf -X POST "$APP_URL/api/cron/reminders" -H "x-cron-secret: $CRON_SECRET"
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::Секрет CRON_SECRET не задан в настройках репозитория"
+            exit 1
+          fi
+
+          code=$(curl -s -o /tmp/out.txt -w '%{http_code}' \
+            -X POST "$APP_URL/api/cron/reminders" \
+            -H "x-cron-secret: $CRON_SECRET")
+
+          echo "HTTP $code"
+          cat /tmp/out.txt
+
+          case "$code" in
+            200) echo "::notice::Напоминания разосланы" ;;
+            401) echo "::error::401 — CRON_SECRET в GitHub и в Vercel не совпадают"; exit 1 ;;
+            *)   echo "::error::Неожиданный ответ $code"; exit 1 ;;
+          esac
