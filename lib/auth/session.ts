@@ -51,3 +51,14 @@ export function verifyCronSecret(candidate: string | undefined | null): boolean 
   if (expectedBuf.length !== actualBuf.length) return false;
   return timingSafeEqual(expectedBuf, actualBuf);
 }
+
+// Токен для машин (MCP-сервер noname). Отдельный от APP_PASSWORD и CRON_SECRET,
+// чтобы можно было отозвать доступ агента, не трогая вход в приложение.
+export function verifyMcpToken(candidate: string | undefined | null): boolean {
+  const expected = process.env.MCP_TOKEN;
+  if (!expected || !candidate) return false;
+  const expectedBuf = Buffer.from(expected);
+  const actualBuf = Buffer.from(candidate);
+  if (expectedBuf.length !== actualBuf.length) return false;
+  return timingSafeEqual(expectedBuf, actualBuf);
+}
