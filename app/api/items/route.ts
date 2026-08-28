@@ -1,15 +1,23 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createItem, listItems } from "@/lib/tg/repo";
 import { MODULES, type Module } from "@/lib/model/item";
+import { requireAuth, isDenied, agentMayTouchModule } from "@/lib/auth/guard";
 
 function isModule(value: string | null): value is Module {
   return !!value && (MODULES as readonly string[]).includes(value);
 }
 
 export async function GET(request: NextRequest) {
+  const auth = requireAuth(request, ["session", "mcp"]);
+  if (isDenied(auth)) return auth;
+
   const { searchParams } = request.nextUrl;
   const moduleParam = searchParams.get("module");
   const includeArchived = searchParams.get("includeArchived") === "true";
+
+  if (!agentMayTouchModule(auth.caller, moduleParam)) {
+    return NextResponse.json({ error: "module is not available to agents" }, { status: 403 });
+  }
 
   const items = await listItems({
     module: isModule(moduleParam) ? moduleParam : undefined,
@@ -19,10 +27,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = requireAuth(request, ["session", "mcp"]);
+  if (isDenied(auth)) return auth;
+
   const body = await request.json().catch(() => null);
 
   if (!body || !isModule(body.module)) {
     return NextResponse.json({ error: "valid module is required" }, { status: 400 });
+  }
+  if (!agentMayTouchModule(auth.caller, body.module)) {
+    return NextResponse.json({ error: "module is not available to agents" }, { status: 403 });
   }
   if (typeof body.title !== "string" && typeof body.body !== "string") {
     return NextResponse.json({ error: "title or body is required" }, { status: 400 });

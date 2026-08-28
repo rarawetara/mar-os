@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { listItems, updateItem } from "@/lib/tg/repo";
+import { requireAuth, isDenied } from "@/lib/auth/guard";
 
 function requireEnv(name: string): string {
   const value = process.env[name];
@@ -40,10 +41,14 @@ async function handleReminders() {
   return NextResponse.json({ checked: reminders.length, sent: sentIds });
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const auth = requireAuth(request, ["cron", "session"]);
+  if (isDenied(auth)) return auth;
   return handleReminders();
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const auth = requireAuth(request, ["cron", "session"]);
+  if (isDenied(auth)) return auth;
   return handleReminders();
 }
