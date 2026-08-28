@@ -41,14 +41,27 @@ async function handleReminders() {
   return NextResponse.json({ checked: reminders.length, sent: sentIds });
 }
 
-export async function GET(request: NextRequest) {
+// Эндпоинт за авторизацией, поэтому текст ошибки можно вернуть вызывающему:
+// иначе Vercel отдаёт пустой 500 и причину видно только в его логах.
+// Печатается только сообщение (например «Missing required env var: NOTIFY_CHAT_ID»),
+// значения переменных наружу не идут.
+async function guarded(request: NextRequest) {
   const auth = requireAuth(request, ["cron", "session"]);
   if (isDenied(auth)) return auth;
-  return handleReminders();
+
+  try {
+    return await handleReminders();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("cron/reminders упал:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function GET(request: NextRequest) {
+  return guarded(request);
 }
 
 export async function POST(request: NextRequest) {
-  const auth = requireAuth(request, ["cron", "session"]);
-  if (isDenied(auth)) return auth;
-  return handleReminders();
+  return guarded(request);
 }
