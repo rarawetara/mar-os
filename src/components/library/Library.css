@@ -1,0 +1,44 @@
+.mar-lib-sidebar {
+  width: 214px; flex-shrink: 0; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; background: var(--surface-2);
+}
+.mar-lib-title { padding: 16px 14px 6px; font-family: var(--font-display); font-size: 19px; color: var(--accent); text-shadow: 2px 2px 0 var(--ink); }
+.mar-lib-list { flex: 1; overflow-y: auto; padding: 8px 10px; }
+.mar-lib-row {
+  display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px;
+  cursor: pointer; font-size: 12.5px;
+}
+.mar-lib-row:hover { background: var(--surface); }
+.mar-lib-row.is-active { background: var(--surface); box-shadow: 1.5px 1.5px 0 var(--ink); border: 1px solid var(--ink); }
+.mar-lib-row-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mar-lib-row-count { font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); }
+.mar-lib-add {
+  display: flex; align-items: center; gap: 6px; justify-content: center;
+  margin: 6px 10px 14px; border: 1.25px dashed var(--border-strong); border-radius: 999px;
+  padding: 7px 0; font-size: 12px; color: var(--text-muted); cursor: pointer;
+}
+.mar-lib-add:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+.mar-lib-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.mar-lib-head { padding: 15px 20px 13px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.mar-lib-icon {
+  width: 36px; height: 36px; border: 1.5px solid var(--ink); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--surface);
+}
+.mar-lib-name-input { flex: 1; min-width: 0; border: none; background: transparent; font-family: var(--font-display); font-size: 20px; padding: 2px 0; }
+
+.mar-lib-table-wrap { flex: 1; overflow: auto; padding: 0 0 40px; }
+.mar-lib-table { border-collapse: collapse; width: 100%; min-width: max-content; }
+.mar-lib-table th {
+  position: sticky; top: 0; background: var(--surface); z-index: 2; text-align: left; padding: 10px 12px;
+  border-bottom: 1.5px solid var(--ink); white-space: nowrap; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted);
+}
+.mar-lib-table td { padding: 5px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.mar-lib-cell {
+  border: 1.5px solid transparent; background: transparent; border-radius: 10px;
+  padding: 5px 7px; font-size: 12.5px; width: 100%; min-width: 120px;
+}
+.mar-lib-cell:hover { border-color: var(--border-strong); }
+.mar-lib-cell:focus-visible { outline: none; border-color: var(--accent); background: var(--surface); }
+.mar-lib-empty { padding: 40px 20px; color: var(--text-faint); font-size: 13px; text-align: center; }

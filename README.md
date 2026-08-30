@@ -1,27 +1,32 @@
-# MÄR
+# React + TypeScript + Vite
 
-Личный «second brain» / life-OS. Данные лежат в приватном Telegram-канале (GramJS/MTProto),
-одна запись — одно сообщение с JSON. Канон проекта — `CLAUDE.md` и `MAR.Plan.md`.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Setup
+Currently, two official plugins are available:
 
-```bash
-npm install
-cp .env.example .env.local   # заполнить все переменные
-npm run login                # разово: печатает TELEGRAM_SESSION → вставить в .env.local
-npm run dev
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
 ```
 
-Env-переменные — см. `.env.example`. `TELEGRAM_SESSION` даёт полный доступ к аккаунту —
-только в env, никогда в репо/логи.
-
-## Деплой (Vercel)
-
-1. Залить все переменные из `.env.example` в Vercel → Project Settings → Environment Variables.
-2. В GitHub repo secrets добавить `APP_URL` (продовый URL деплоя) и `CRON_SECRET` — их использует
-   `.github/workflows/reminders.yml`, который каждые ~10 минут дёргает `/api/cron/reminders`.
-
-## Стек
-
-Next.js (App Router, TS) · Tailwind v4 · Framer Motion · GramJS · next-pwa alternative
-(native `app/manifest.ts` + hand-rolled `public/sw.js`, см. `MAR.Plan.md` BL-12).
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
